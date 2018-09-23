@@ -6,7 +6,7 @@ import org.junit.runner.RunWith;
 
 @RunWith(Cucumber.class)
 @CucumberOptions(
-        format = {"pretty"},
+        format = {"pretty", "json:target/cucumber-report/json/cucumber.json", "html:target/cucumber-report//html"},
         features = {"src/test/resources/com/radequin/gangoffour/service/cardService.feature"}
 )
 public class GangOfFourApplicationTests {

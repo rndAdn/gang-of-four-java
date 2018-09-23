@@ -72,7 +72,8 @@ public class CardService {
 
     }
 
-    private BigInteger cardsToBigInteger(List<Card> cards) {
+    BigInteger cardsToBigInteger(List<Card> cards) {
+        cards.sort(Card::compareTo);
         int index = 0;
         BigInteger value = BigInteger.ZERO;
         BigInteger pow;
@@ -264,6 +265,12 @@ public class CardService {
 
     boolean isValidCard(Card card) {
         switch (card.getCardValue()) {
+            case ONE:
+
+                if (card.getCardColor() != CardColor.GREEN && card.getCardColor() != CardColor.YELLOW && card.getCardColor() != CardColor.RED && card.getCardColor() != CardColor.MULTI_COLOR) {
+                    return false;
+                }
+                break;
             case TWO:
             case THREE:
             case FOUR:
@@ -287,6 +294,9 @@ public class CardService {
                 if (card.getCardColor() != CardColor.RED) {
                     return false;
                 }
+                break;
+            default:
+                return false;
         }
         return true;
     }
