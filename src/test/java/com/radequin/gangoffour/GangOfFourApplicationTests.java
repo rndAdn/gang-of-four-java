@@ -1,16 +1,14 @@
 package com.radequin.gangoffour;
 
-import org.junit.Test;
+import cucumber.api.CucumberOptions;
+import cucumber.api.junit.Cucumber;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+@RunWith(Cucumber.class)
+@CucumberOptions(
+        format = {"pretty"},
+        features = {"src/test/resources/com/radequin/gangoffour/service/cardService.feature"}
+)
 public class GangOfFourApplicationTests {
-
-	@Test
-	public void contextLoads() {
-	}
 
 }
