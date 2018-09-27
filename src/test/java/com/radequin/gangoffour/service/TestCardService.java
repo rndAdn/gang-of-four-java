@@ -39,7 +39,7 @@ public class TestCardService {
         resultBoolean = cardService.isValidCard(my_Card);
     }
 
-    @Then("^I should get (\\w+)")
+    @Then("^I should get boolean (\\w+)")
     public void i_should_get_true(String expected) {
         Assert.assertEquals(Boolean.parseBoolean(expected), resultBoolean);
     }

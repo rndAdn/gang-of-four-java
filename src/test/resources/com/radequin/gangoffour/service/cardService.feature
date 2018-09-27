@@ -3,37 +3,37 @@ Feature: Check Card Service
   Scenario: Is 1G a valid card
     Given My card is 1G
     When I check if my card is valid
-    Then I should get true
+    Then I should get boolean true
 
   Scenario: Is 1M a valid card
     Given My card is 1M
     When I check if my card is valid
-    Then I should get true
+    Then I should get boolean true
 
   Scenario: Is 2M a valid card
     Given My card is 2M
     When I check if my card is valid
-    Then I should get false
+    Then I should get boolean false
 
   Scenario: Is Pheonix green a valid card
     Given My card is 11G
     When I check if my card is valid
-    Then I should get true
+    Then I should get boolean true
 
   Scenario: Is Pheonix red a valid card
     Given My card is 11R
     When I check if my card is valid
-    Then I should get false
+    Then I should get boolean false
 
   Scenario: Is Dragon red a valid card
     Given My card is 12R
     When I check if my card is valid
-    Then I should get true
+    Then I should get boolean true
 
   Scenario: Is Dragon yellow a valid card
     Given My card is 12Y
     When I check if my card is valid
-    Then I should get false
+    Then I should get boolean false
 
   Scenario: I want to transform my cards [2R] to a number
     Given A list of card
@@ -93,21 +93,21 @@ Feature: Check Card Service
       | hand1 | 1Y,1Y |
       | hand2 | 1G,1G |
     When I compare hand1 and hand2
-    Then I should get true
+    Then I should get boolean true
 
   Scenario: I want to know if my hand1 [1Y, 1Y] beat this hand2 [1R, 1R]
     Given Two hand
       | hand1 | 1Y,1Y |
       | hand2 | 1R,1R |
     When I compare hand1 and hand2
-    Then I should get false
+    Then I should get boolean false
 
   Scenario: I want to know if my hand1 [1Y,1Y,1R,1R] beat this hand2 [4Y,4Y,5Y,5Y,5R]
     Given Two hand
       | hand1 | 1Y,1Y,1R,1R    |
       | hand2 | 4Y,4Y,5Y,5Y,5R |
     When I compare hand1 and hand2
-    Then I should get true
+    Then I should get boolean true
 
 
   Scenario: I want to know if my hand1 [1Y,1Y,1R,1R,1M] beat this hand2 [4Y,4Y,5Y,5Y,5R]
@@ -115,21 +115,21 @@ Feature: Check Card Service
       | hand1 | 1Y,1Y,1R,1R,1M |
       | hand2 | 4Y,4Y,5Y,5Y,5R |
     When I compare hand1 and hand2
-    Then I should get true
+    Then I should get boolean true
 
   Scenario: I want to know if my hand1 [1Y,1Y,1R,1R,1M] beat this hand2 [4Y,4Y,5Y,5Y,5R]
     Given Two hand
       | hand1 | 1G,1Y,1Y,1R,1R,1M |
       | hand2 | 4Y,4Y,5Y,5Y,5R    |
     When I compare hand1 and hand2
-    Then I should get true
+    Then I should get boolean true
 
   Scenario: I want to know if my hand1 [1Y,1Y,1R,1R,1M] beat this hand2 [4Y,4Y,5Y,5Y,5R]
     Given Two hand
       | hand1 | 1G,1G,1Y,1Y,1R,1R,1M |
       | hand2 | 4Y,4Y,5Y,5Y,5R       |
     When I compare hand1 and hand2
-    Then I should get true
+    Then I should get boolean true
 
   Scenario: I want to create a deck of cards
     Given Nothing
