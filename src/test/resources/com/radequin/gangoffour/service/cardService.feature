@@ -49,6 +49,24 @@ Feature: Check Card Service
     Then It should be equal to 122
 
 
+  Scenario: I want to transform my string of cards [1G] to a list of cards
+    Given A string of number 10 that represent a list of card
+    When I transfom my number to list of card
+    Then It should be equal to the list
+      | 1G |
+
+  Scenario: I want to transform my string of cards [1G, 1G, 1Y, 1Y, 1R, 1R, 1M] to a list of cards
+    Given A string of number 45357341850961 that represent a list of card
+    When I transfom my number to list of card
+    Then It should be equal to the list
+      | 1G |
+      | 1G |
+      | 1Y |
+      | 1Y |
+      | 1R |
+      | 1R |
+      | 1M |
+
   Scenario: I want to transform my cards [1G, 1G, 1Y, 1Y, 1R, 1R, 1M] to a number
     Given A list of card
       | 1G |
@@ -69,3 +87,51 @@ Feature: Check Card Service
       | 1G  |
     When I transfom my list of card to number
     Then It should be equal to 206244811
+
+  Scenario: I want to know if my hand1 [1Y, 1Y] beat this hand2 [1G, 1G]
+    Given Two hand
+      | hand1 | 1Y,1Y |
+      | hand2 | 1G,1G |
+    When I compare hand1 and hand2
+    Then I should get true
+
+  Scenario: I want to know if my hand1 [1Y, 1Y] beat this hand2 [1R, 1R]
+    Given Two hand
+      | hand1 | 1Y,1Y |
+      | hand2 | 1R,1R |
+    When I compare hand1 and hand2
+    Then I should get false
+
+  Scenario: I want to know if my hand1 [1Y,1Y,1R,1R] beat this hand2 [4Y,4Y,5Y,5Y,5R]
+    Given Two hand
+      | hand1 | 1Y,1Y,1R,1R    |
+      | hand2 | 4Y,4Y,5Y,5Y,5R |
+    When I compare hand1 and hand2
+    Then I should get true
+
+
+  Scenario: I want to know if my hand1 [1Y,1Y,1R,1R,1M] beat this hand2 [4Y,4Y,5Y,5Y,5R]
+    Given Two hand
+      | hand1 | 1Y,1Y,1R,1R,1M |
+      | hand2 | 4Y,4Y,5Y,5Y,5R |
+    When I compare hand1 and hand2
+    Then I should get true
+
+  Scenario: I want to know if my hand1 [1Y,1Y,1R,1R,1M] beat this hand2 [4Y,4Y,5Y,5Y,5R]
+    Given Two hand
+      | hand1 | 1G,1Y,1Y,1R,1R,1M |
+      | hand2 | 4Y,4Y,5Y,5Y,5R    |
+    When I compare hand1 and hand2
+    Then I should get true
+
+  Scenario: I want to know if my hand1 [1Y,1Y,1R,1R,1M] beat this hand2 [4Y,4Y,5Y,5Y,5R]
+    Given Two hand
+      | hand1 | 1G,1G,1Y,1Y,1R,1R,1M |
+      | hand2 | 4Y,4Y,5Y,5Y,5R       |
+    When I compare hand1 and hand2
+    Then I should get true
+
+  Scenario: I want to create a deck of cards
+    Given Nothing
+    When create a deck
+    Then I should get a number of 64 cards

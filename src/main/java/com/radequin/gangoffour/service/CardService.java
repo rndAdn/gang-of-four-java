@@ -19,59 +19,12 @@ import java.util.List;
 @Slf4j
 public class CardService {
 
-    Tuple<List<Card>, HandValue> bigIntegerToCardsHandValue(BigInteger value) throws HandException {
-        BigInteger bigInteger = value;
-        BigInteger puiss = new BigInteger(String.valueOf(123));
-        List<Card> cards = new ArrayList<>();
-        while (bigInteger.compareTo(puiss) > 0) {
-            BigInteger l = bigInteger.mod(puiss);
-            bigInteger = bigInteger.subtract(l);
-            bigInteger = bigInteger.divide(puiss);
-            cards.add(new Card(Long.parseLong(l.toString())));
-        }
-
-        BigInteger l = bigInteger.mod(puiss);
-        HandValue handValue = HandValue.findByValue(Integer.parseInt(l.toString()));
-        HandValue computeHandValue = findHandValue(cards);
-        if (handValue == computeHandValue) {
-            return new Tuple<>(cards, handValue);
-        }
-        String msg = String.format("Hands value does not match given %s compute %s cards %s", handValue, computeHandValue, cards);
-        log.error(msg);
-        throw new HandException(msg);
-    }
-
-    List<Card> bigIntegerToCards(BigInteger value) throws HandException {
-        BigInteger bigInteger = value;
-        BigInteger puiss = new BigInteger(String.valueOf(123));
-        List<Card> cards = new ArrayList<>();
-        while (bigInteger.compareTo(BigInteger.ZERO) > 0) {
-            BigInteger l = bigInteger.mod(puiss);
-            bigInteger = bigInteger.subtract(l);
-            bigInteger = bigInteger.divide(puiss);
-            cards.add(new Card(Long.parseLong(l.toString())));
-        }
-        isValidCards(cards);
-        return cards;
-    }
-
-    private BigInteger cardsToBigInteger(List<Card> cards, HandValue handValue) {
-        int index = 0;
-        BigInteger value = BigInteger.ZERO;
-        BigInteger pow;
-        BigInteger puiss = new BigInteger(String.valueOf(123));
-        for (Card card : cards) {
-            pow = puiss.pow(index);
-            value = value.add(pow.multiply(new BigInteger(card.getStringValue())));
-            index++;
-        }
-        pow = puiss.pow(index);
-        value = value.add(pow.multiply(new BigInteger(String.valueOf(handValue.getValue()))));
-
-        return value;
-
-    }
-
+    /**
+     * change a list of card to a BigInteger that represent the list
+     *
+     * @param cards list of card
+     * @return BigInteger that represent the list
+     */
     BigInteger cardsToBigInteger(List<Card> cards) {
         cards.sort(Card::compareTo);
         int index = 0;
@@ -87,9 +40,67 @@ public class CardService {
 
     }
 
-    BigInteger cardsToBigInteger(Tuple<List<Card>, HandValue> listHandValueTuple) {
-        return cardsToBigInteger(listHandValueTuple.getFirst(), listHandValueTuple.getSeconde());
+    /**
+     * Tell if the card is a valid one
+     *
+     * @param card to check
+     * @return true if the card is valid false otherwise
+     */
+    boolean isValidCard(Card card) {
+        switch (card.getCardValue()) {
+            case ONE:
 
+                if (card.getCardColor() != CardColor.GREEN && card.getCardColor() != CardColor.YELLOW && card.getCardColor() != CardColor.RED && card.getCardColor() != CardColor.MULTI_COLOR) {
+                    return false;
+                }
+                break;
+            case TWO:
+            case THREE:
+            case FOUR:
+            case FIVE:
+            case SIX:
+            case SEVEN:
+            case EIGHT:
+            case NINE:
+            case TEN:
+
+                if (card.getCardColor() != CardColor.GREEN && card.getCardColor() != CardColor.YELLOW && card.getCardColor() != CardColor.RED) {
+                    return false;
+                }
+                break;
+            case PHEONIX:
+                if (card.getCardColor() != CardColor.GREEN && card.getCardColor() != CardColor.YELLOW) {
+                    return false;
+                }
+                break;
+            case DRAGON:
+                if (card.getCardColor() != CardColor.RED) {
+                    return false;
+                }
+                break;
+            default:
+                return false;
+        }
+        return true;
+    }
+
+
+    boolean compareHand(List<Card> hand1, List<Card> hand2) throws HandException {
+        return compareHand(new Tuple<>(hand1, findHandValue(hand1)), new Tuple<>(hand2, findHandValue(hand2)));
+    }
+
+    List<Card> bigIntegerToCards(BigInteger value) throws HandException {
+        BigInteger bigInteger = value;
+        BigInteger puiss = new BigInteger(String.valueOf(123));
+        List<Card> cards = new ArrayList<>();
+        while (bigInteger.compareTo(BigInteger.ZERO) > 0) {
+            BigInteger l = bigInteger.mod(puiss);
+            bigInteger = bigInteger.subtract(l);
+            bigInteger = bigInteger.divide(puiss);
+            cards.add(new Card(Long.parseLong(l.toString())));
+        }
+        isValidCards(cards);
+        return cards;
     }
 
     private void isValidCards(List<Card> cards) throws HandException {
@@ -176,10 +187,6 @@ public class CardService {
 
     }
 
-    boolean compareHand(List<Card> bigIntegerToCards, List<Card> bigIntegerToCards1) throws HandException {
-        return compareHand(new Tuple<>(bigIntegerToCards, findHandValue(bigIntegerToCards)), new Tuple<>(bigIntegerToCards1, findHandValue(bigIntegerToCards1)));
-    }
-
     private boolean compareHand(Tuple<List<Card>, HandValue> hand1, Tuple<List<Card>, HandValue> hand2) {
         if (hand1.getSeconde() == hand2.getSeconde() &&
                 cardsToBigInteger(hand2.getFirst()).compareTo(cardsToBigInteger(hand1.getFirst())) > 0) {
@@ -262,44 +269,6 @@ public class CardService {
         return true;
     }
 
-
-    boolean isValidCard(Card card) {
-        switch (card.getCardValue()) {
-            case ONE:
-
-                if (card.getCardColor() != CardColor.GREEN && card.getCardColor() != CardColor.YELLOW && card.getCardColor() != CardColor.RED && card.getCardColor() != CardColor.MULTI_COLOR) {
-                    return false;
-                }
-                break;
-            case TWO:
-            case THREE:
-            case FOUR:
-            case FIVE:
-            case SIX:
-            case SEVEN:
-            case EIGHT:
-            case NINE:
-            case TEN:
-
-                if (card.getCardColor() != CardColor.GREEN && card.getCardColor() != CardColor.YELLOW && card.getCardColor() != CardColor.RED) {
-                    return false;
-                }
-                break;
-            case PHEONIX:
-                if (card.getCardColor() != CardColor.GREEN && card.getCardColor() != CardColor.YELLOW) {
-                    return false;
-                }
-                break;
-            case DRAGON:
-                if (card.getCardColor() != CardColor.RED) {
-                    return false;
-                }
-                break;
-            default:
-                return false;
-        }
-        return true;
-    }
 
     List<Card> createDeck() {
         List<Card> cardsFullCardDeck = new ArrayList<>();
