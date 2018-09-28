@@ -12,4 +12,6 @@ import javax.persistence.Entity;
 @Setter
 @AllArgsConstructor
 public class Player extends User {
+
+    private static final long serialVersionUID = -8441754006598030025L;
 }
