@@ -3,6 +3,7 @@ package com.radequin.gangoffour.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,12 +19,14 @@ import java.util.Collection;
 @NoArgsConstructor
 @Builder
 @Inheritance(strategy = InheritanceType.JOINED)
+@ToString
 public class User implements Serializable, UserDetails {
 
 
     private static final long serialVersionUID = 200081122366814883L;
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GenericGenerator(name = "generator", strategy = "increment")
+    @GeneratedValue(generator = "generator")
     private long id;
 
     @Column(name = "first_name", nullable = false)

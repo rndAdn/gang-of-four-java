@@ -37,15 +37,23 @@ public class TokenAuthenticationService {
         this.passwordEncoder = passwordEncoder;
     }
 
+
+    public Optional<User> findByName(String username) {
+        return Optional.ofNullable(users.findOneByUserName(username));
+    }
+
     public Optional<UserLoginDTO> login(String username, String password) {
         Map<String, String> map = new HashMap<>();
         map.put("username", username);
 
         User user = users
                 .findOneByUserName(username);
-        if (user.getUsername().equals(username) && passwordEncoder.matches(password, user.getPassword())) {
+        if (user == null) {
+            return Optional.empty();
+        } else if (user.getUsername().equals(username) && passwordEncoder.matches(password, user.getPassword())) {
             UserLoginDTO userLoginDTO = new UserLoginDTO();
             userLoginDTO.setUsername(username);
+            userLoginDTO.setProfilePicture(user.getProfilePicture());
             userLoginDTO.setToken(tokens.expiring(map));
             userLoginDTO.setId(user.getId());
             return Optional.of(userLoginDTO);
@@ -54,9 +62,16 @@ public class TokenAuthenticationService {
     }
 
     public Optional<User> register(User user) throws UserException {
+
+        if (findByName(user.getUsername()).isPresent()) {
+            throw new UserException("User already exist");
+        }
+
+
         Player newUser = new Player();
         newUser.setUserName(user.getUsername());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
+        log.debug(newUser.getPassword());
         newUser.setEmail(user.getEmail());
         newUser.setFirstName(user.getFirstName());
         newUser.setLastName(user.getLastName());

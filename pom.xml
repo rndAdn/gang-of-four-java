@@ -24,7 +24,8 @@
         <java.version>1.8</java.version>
         <swagger.version>2.7.0</swagger.version>
         <jjwt.version>0.9.0</jjwt.version>
-        <cucumber.version>1.2.4</cucumber.version>
+        <cucumber.version>3.0.0</cucumber.version>
+        <hamcrest.verion>1.3</hamcrest.verion>
     </properties>
 
     <dependencies>
@@ -61,7 +62,6 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
@@ -91,28 +91,39 @@
 
         <!-- cucumber testing -->
         <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-java</artifactId>
-            <version>${cucumber.version}</version>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>${rest-assured.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-junit</artifactId>
-            <version>${cucumber.version}</version>
-            <scope>test</scope>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-all</artifactId>
+            <version>${hamcrest.verion}</version>
         </dependency>
         <dependency>
-            <groupId>info.cukes</groupId>
-            <artifactId>cucumber-spring</artifactId>
-            <version>${cucumber.version}</version>
-            <scope>test</scope>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-tx</artifactId>
-            <scope>test</scope>
-        </dependency>
+        <!-- <dependency>
+             <groupId>io.cucumber</groupId>
+             <artifactId>cucumber-java</artifactId>
+             <version>${cucumber.version}</version>
+             <scope>test</scope>
+         </dependency>
+         <dependency>
+             <groupId>io.cucumber</groupId>
+             <artifactId>cucumber-junit</artifactId>
+             <version>${cucumber.version}</version>
+             <scope>test</scope>
+         </dependency>
+         <dependency>
+             <groupId>io.cucumber</groupId>
+             <artifactId>cucumber-spring</artifactId>
+             <version>${cucumber.version}</version>
+             <scope>test</scope>
+         </dependency>-->
+
 
     </dependencies>
 

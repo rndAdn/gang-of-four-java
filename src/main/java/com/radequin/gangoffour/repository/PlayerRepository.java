@@ -10,7 +10,7 @@ import java.util.List;
 public interface PlayerRepository extends CrudRepository<Player, Long> {
 
     @Override
-    Player  save(Player s);
+    Player save(Player s);
 
     Player findOneByUserName(String userName);
 
@@ -18,4 +18,8 @@ public interface PlayerRepository extends CrudRepository<Player, Long> {
     List<Player> findAll();
 
     Player findOneById(long id);
+
+    void deleteByUserName(String username);
+
+
 }

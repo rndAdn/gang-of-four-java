@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/player")
 public class PlayerController {
 
-    final PlayerService playerService;
+    private final PlayerService playerService;
 
     @Autowired
     public PlayerController(PlayerService playerService) {

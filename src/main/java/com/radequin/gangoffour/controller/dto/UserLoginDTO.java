@@ -18,6 +18,8 @@ public class UserLoginDTO {
     @NotNull
     private String password;
 
+    private String profilePicture;
+
     long id;
     String token;
 

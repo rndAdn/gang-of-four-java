@@ -2,6 +2,7 @@ package com.radequin.gangoffour.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.radequin.gangoffour.domain.GamePlayer;
 import com.radequin.gangoffour.domain.Player;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
+
 public class PlayerDTO extends UserDTO {
 
     private long id;
@@ -40,6 +42,15 @@ public class PlayerDTO extends UserDTO {
         setUserName(player.getUsername());
         setEmail(player.getEmail());
         setProfilePicture(player.getProfilePicture());
+    }
+
+    public PlayerDTO(GamePlayer player) {
+        setId(player.getPlayer().getId());
+        setUserName(player.getPlayer().getUsername());
+        setEmail(player.getPlayer().getEmail());
+        setCardLeft(player.getCardsLeft());
+        setTurn(player.getOrderToPlay());
+        setProfilePicture(player.getPlayer().getProfilePicture());
     }
 
 

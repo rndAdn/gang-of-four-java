@@ -12,6 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 import static lombok.AccessLevel.PACKAGE;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -28,6 +30,7 @@ final class PublicUsersController {
 
     @PostMapping("/register")
     ResponseEntity<?> register(@RequestBody UserDTO userDTO) {
+        log.debug("{}", userDTO);
         User newUser = User.builder()
                 .userName(userDTO.getUserName())
                 .password(userDTO.getPassword())
@@ -42,6 +45,7 @@ final class PublicUsersController {
             UserLoginDTO userLoginDTO = new UserLoginDTO();
             userLoginDTO.setUsername(userDTO.getUserName());
             userLoginDTO.setPassword(userDTO.getPassword());
+            userLoginDTO.setProfilePicture(userDTO.getProfilePicture());
             return ResponseEntity.ok(login(userLoginDTO));
         } catch (UserException e) {
             return ResponseEntity.badRequest().body("User Not Created " + e.getMessage());
@@ -49,21 +53,26 @@ final class PublicUsersController {
     }
 
     @PostMapping("/login")
-    private UserLoginDTO login(
+    private ResponseEntity<?> login(
             @RequestBody UserLoginDTO userDTO) {
         log.debug("username {}, pwd {}", userDTO.getUsername(), userDTO.getPassword());
-        return authentication
-                .login(userDTO.getUsername(), userDTO.getPassword())
-                .orElseThrow(() -> new RuntimeException("invalid login and/or password"));
+        Optional<UserLoginDTO> userLoginDTO = authentication
+                .login(userDTO.getUsername(), userDTO.getPassword());
+
+        if (userLoginDTO.isPresent()) {
+            return ResponseEntity.ok(userLoginDTO.get());
+        } else {
+            return ResponseEntity.status(401).body("invalid login and/or password");
+        }
     }
 
-    @GetMapping("/test")
-    String loginTEST() {
-        return "hello get";
+    @GetMapping("/up")
+    String up() {
+        return "I'm up";
     }
 
-    @PostMapping("/test")
-    String logiTESTn() {
-        return "hello POST";
+    @PostMapping("/up")
+    String upp() {
+        return "I'm up";
     }
 }

@@ -1,10 +1,7 @@
 package com.radequin.gangoffour.service;
 
 
-import com.radequin.gangoffour.domain.Card;
-import com.radequin.gangoffour.domain.CardColor;
-import com.radequin.gangoffour.domain.CardValue;
-import com.radequin.gangoffour.domain.HandValue;
+import com.radequin.gangoffour.domain.*;
 import com.radequin.gangoffour.exception.HandException;
 import com.radequin.gangoffour.utils.Tuple;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +15,7 @@ import java.util.List;
 @Service
 @Slf4j
 public class CardService {
+
 
     /**
      * change a list of card to a BigInteger that represent the list
@@ -46,7 +44,7 @@ public class CardService {
      * @param card to check
      * @return true if the card is valid false otherwise
      */
-    boolean isValidCard(Card card) {
+    private boolean isValidCard(Card card) {
         switch (card.getCardValue()) {
             case ONE:
 
@@ -85,7 +83,11 @@ public class CardService {
     }
 
 
-    boolean compareHand(List<Card> hand1, List<Card> hand2) throws HandException {
+    boolean compareHand(String hand1, String hand2) throws HandException {
+        return compareHand(bigIntegerToCards(hand1), bigIntegerToCards(hand2));
+    }
+
+    private boolean compareHand(List<Card> hand1, List<Card> hand2) throws HandException {
         return compareHand(new Tuple<>(hand1, findHandValue(hand1)), new Tuple<>(hand2, findHandValue(hand2)));
     }
 
@@ -101,6 +103,10 @@ public class CardService {
         }
         isValidCards(cards);
         return cards;
+    }
+
+    List<Card> bigIntegerToCards(String value) throws HandException {
+        return bigIntegerToCards(new BigInteger(value));
     }
 
     private void isValidCards(List<Card> cards) throws HandException {
@@ -269,6 +275,13 @@ public class CardService {
         return true;
     }
 
+    void setCard(GamePlayer player) throws HandException {
+        List<Card> cards;
+        cards = bigIntegerToCards(new BigInteger(player.getHand()));
+        cards.sort(Card::compareTo);
+        player.setHand(cardsToBigInteger(cards).toString());
+        player.setCardsLeft(cards.size());
+    }
 
     List<Card> createDeck() {
         List<Card> cardsFullCardDeck = new ArrayList<>();

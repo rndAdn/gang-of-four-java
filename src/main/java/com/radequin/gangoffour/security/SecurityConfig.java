@@ -41,23 +41,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     TokenAuthenticationProvider provider;
 
-    SecurityConfig(final TokenAuthenticationProvider provider) {
+    SecurityConfig(TokenAuthenticationProvider provider) {
         super();
         this.provider = requireNonNull(provider);
     }
 
     @Override
-    protected void configure(final AuthenticationManagerBuilder auth) {
+    protected void configure(AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(provider);
     }
 
     @Override
-    public void configure(final WebSecurity web) {
+    public void configure(WebSecurity web) {
         web.ignoring().requestMatchers(PUBLIC_URLS);
     }
 
     @Override
-    protected void configure(final HttpSecurity http) throws Exception {
+    protected void configure(HttpSecurity http) throws Exception {
         http
                 .sessionManagement()
                 .sessionCreationPolicy(STATELESS)
@@ -82,7 +82,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     TokenAuthenticationFilter restAuthenticationFilter() throws Exception {
-        final TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
+        TokenAuthenticationFilter filter = new TokenAuthenticationFilter(PROTECTED_URLS);
         filter.setAuthenticationManager(authenticationManager());
         filter.setAuthenticationSuccessHandler(successHandler());
         return filter;
@@ -90,7 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     SimpleUrlAuthenticationSuccessHandler successHandler() {
-        final SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
+        SimpleUrlAuthenticationSuccessHandler successHandler = new SimpleUrlAuthenticationSuccessHandler();
         successHandler.setRedirectStrategy(new NoRedirectStrategy());
         return successHandler;
     }
@@ -99,8 +99,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * Disable Spring boot automatic filter registration.
      */
     @Bean
-    FilterRegistrationBean disableAutoRegistration(final TokenAuthenticationFilter filter) {
-        final FilterRegistrationBean registration = new FilterRegistrationBean(filter);
+    FilterRegistrationBean disableAutoRegistration(TokenAuthenticationFilter filter) {
+        FilterRegistrationBean registration = new FilterRegistrationBean(filter);
         registration.setEnabled(false);
         return registration;
     }

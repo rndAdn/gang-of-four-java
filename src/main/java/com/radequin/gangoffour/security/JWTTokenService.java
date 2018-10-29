@@ -30,39 +30,39 @@ final class JWTTokenService implements Clock, TokenService {
     int clockSkewSec;
     String secretKey;
 
-    JWTTokenService(@Value("${jwt.issuer:octoperf}") final String issuer,
-                    @Value("${jwt.expiration-sec:86400}") final int expirationSec,
-                    @Value("${jwt.clock-skew-sec:300}") final int clockSkewSec,
-                    @Value("${jwt.secret:secret}") final String secret) {
+    JWTTokenService(@Value("${jwt.issuer:octoperf}") String issuer,
+                    @Value("${jwt.expiration-sec:86400}") int expirationSec,
+                    @Value("${jwt.clock-skew-sec:300}") int clockSkewSec,
+                    @Value("${jwt.secret:secret}") String secret) {
         super();
         this.issuer = requireNonNull(issuer);
         this.expirationSec = requireNonNull(expirationSec);
         this.clockSkewSec = requireNonNull(clockSkewSec);
-        this.secretKey = BASE64.encode(requireNonNull(secret));
+        secretKey = BASE64.encode(requireNonNull(secret));
     }
 
     @Override
-    public String permanent(final Map<String, String> attributes) {
+    public String permanent(Map<String, String> attributes) {
         return newToken(attributes, 0);
     }
 
     @Override
-    public String expiring(final Map<String, String> attributes) {
+    public String expiring(Map<String, String> attributes) {
         return newToken(attributes, expirationSec);
     }
 
-    private String newToken(final Map<String, String> attributes, final int expiresInSec) {
+    private String newToken(Map<String, String> attributes, int expiresInSec) {
         LocalDateTime nowLocalDateTime = LocalDateTime.now();
-        final Date now = Date
+        Date now = Date
                 .from(nowLocalDateTime.atZone(ZoneId.systemDefault())
                         .toInstant());
-        final Claims claims = Jwts
+        Claims claims = Jwts
                 .claims()
                 .setIssuer(issuer)
                 .setIssuedAt(now);
 
         if (expiresInSec > 0) {
-            final Date expiresAt = Date
+            Date expiresAt = Date
                     .from(nowLocalDateTime.plusSeconds(expiresInSec).atZone(ZoneId.systemDefault())
                             .toInstant());
             claims.setExpiration(expiresAt);
@@ -78,8 +78,8 @@ final class JWTTokenService implements Clock, TokenService {
     }
 
     @Override
-    public Map<String, String> verify(final String token) {
-        final JwtParser parser = Jwts
+    public Map<String, String> verify(String token) {
+        JwtParser parser = Jwts
                 .parser()
                 .requireIssuer(issuer)
                 .setClock(this)
@@ -89,27 +89,27 @@ final class JWTTokenService implements Clock, TokenService {
     }
 
     @Override
-    public Map<String, String> untrusted(final String token) {
-        final JwtParser parser = Jwts
+    public Map<String, String> untrusted(String token) {
+        JwtParser parser = Jwts
                 .parser()
                 .requireIssuer(issuer)
                 .setClock(this)
                 .setAllowedClockSkewSeconds(clockSkewSec);
 
         // See: https://github.com/jwtk/jjwt/issues/135
-        final String withoutSignature = substringBeforeLast(token, DOT) + DOT;
+        String withoutSignature = substringBeforeLast(token, DOT) + DOT;
         return parseClaims(() -> parser.parseClaimsJwt(withoutSignature).getBody());
     }
 
-    private static Map<String, String> parseClaims(final Supplier<Claims> toClaims) {
+    private static Map<String, String> parseClaims(Supplier<Claims> toClaims) {
         try {
-            final Claims claims = toClaims.get();
-            final ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
-            for (final Map.Entry<String, Object> e: claims.entrySet()) {
+            Claims claims = toClaims.get();
+            ImmutableMap.Builder<String, String> builder = ImmutableMap.builder();
+            for (Map.Entry<String, Object> e : claims.entrySet()) {
                 builder.put(e.getKey(), String.valueOf(e.getValue()));
             }
             return builder.build();
-        } catch (final IllegalArgumentException | JwtException e) {
+        } catch (IllegalArgumentException | JwtException e) {
             return ImmutableMap.of();
         }
     }
